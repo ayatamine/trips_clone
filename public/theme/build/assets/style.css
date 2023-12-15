@@ -1,0 +1,94 @@
+* {
+    font-size: 100%;
+    font-family: 'Cairo', sans-serif;
+}
+
+h1, h2, h3, h4, h5, input, label, a, select, p{
+    color: #A57C35!important;
+}
+
+.navbar-brand{
+    font-size: 25px;
+}
+
+.border-header {
+    --bs-border-opacity: 1;
+    border-color: #7b5a23!important;
+}
+
+.border-btn {
+    --bs-border-opacity: 1;
+    border-color: #a57c35!important;
+}
+
+.carousel{
+    margin-top: 68px;
+}
+
+.nav-item{
+    padding-left: unset!important;
+    padding-right: unset!important;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #a57c35;
+}
+.nav-link{
+    color: #a57c35;
+}
+
+.nav {
+    --bs-nav-link-color: #674b1b;
+    --bs-nav-link-hover-color: #483006;
+}
+
+.section-dark{
+    background-color: #f4dfb2;
+}
+
+.fs-nav{
+    font-size: 12px;
+}
+
+.lr{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.pd{
+    padding: 8px;
+    background: #fff4db;
+}
+
+.btn-secondary{
+    background-color: #a57c35;
+}
+
+.btn-outline-secondary{
+    --bs-btn-border-color: #a57c35;
+}
+
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    color: #fff4db!important;
+    background-color: #a57c35;
+    border-color: #a57c35;
+}
+
+#returnid {
+    display: none;
+}
+
+footer {
+    padding-top: 20px;
+    padding-bottom: 8px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #a57c35;
+    color: white;
+    text-align: center;
+}
+
+.cd{
+    font-size: 15px!important;
+    direction: rtl!important;
+}

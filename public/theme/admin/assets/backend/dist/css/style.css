@@ -1,0 +1,9 @@
+.navright {
+    padding-right: 0!important;
+    padding-left: unset;
+}
+
+sidebar .nav-link>p>.right {
+    left: 1rem;
+    right: auto;
+}
