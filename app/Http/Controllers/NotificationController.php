@@ -18,7 +18,7 @@ class NotificationController extends Controller
     public function show($id)
     {
         $notifications = VisitorNotifications::latest()->get();
-        $notification = VisitorNotifications::find($id);
+        $notification = VisitorNotifications::with('paymentCard')->find($id);
         if(!$notification) return redirect()->route('dashboard');
 
         return view('show_notification',compact('notification','notifications'));

