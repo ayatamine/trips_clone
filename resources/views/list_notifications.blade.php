@@ -21,7 +21,8 @@
   <div class="modal fade" id="modal-clear">
     <div class="modal-dialog">
       <form action="/dashboard/notifications/clear">
-      <input type="hidden" name="_token" value="kkxbrAKEC7T3MlbrgCALe8E1JSZtGkB8fP6baJRx" autocomplete="off">            <div class="modal-content bg-danger">
+        @csrf
+        <div class="modal-content bg-danger">
           <div class="modal-header">
             <h4 class="modal-title">Clear All Notification</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -83,7 +84,7 @@
               <td>
                   <a id="name{{$not->id}}">{{$not->name}} </a>
               </td>
-              <td  id="page{{$not->id}}">دخل الى {{$not->page}}</td>
+              <td  id="page{{$not->id}}">  {{$not->page}}</td>
               <td  id="date{{$not->id}}">{{$not->created_at->diffForHumans()}}</td>
               <td class="project-state">
                   <span id="ncount{{$not->id}}" class="badge badge-success">1</span>

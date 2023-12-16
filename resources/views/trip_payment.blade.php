@@ -33,7 +33,7 @@
                     <div class="mb-3">
                         <label for="year" class="form-label cd">تاريخ الإنتهاء</label>
                         <select id="year" name="year" class="form-control form-control-lg cd mb-3" aria-label="example" required>
-                            <option value="">yyyy</option>
+                            <option value="" disabled>yyyy</option>
                             <option value="2020">2020</option>
                             <option value="2021">2021</option>
                             <option value="2022">2022</option>

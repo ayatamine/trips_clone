@@ -10,17 +10,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SendPeople implements ShouldBroadcast
+class SendPart implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;
+    public $data, $notification;
     /**
      * Create a new event instance.
      */
-    public function __construct($data)
+    public function __construct($data,$notification)
     {
         $this->data = $data;
+        $this->notification = $notification;
     }
 
     /**
@@ -31,7 +32,7 @@ class SendPeople implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('send-people'),
+            new Channel('send-part'),
         ];
     }
     /**
@@ -42,12 +43,13 @@ class SendPeople implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'people_id'=>$this->data->id,
-            'name'=>$this->data->people_name,
-            'date'=>$this->data->updated_at->diffForHumans(),
-            'page'=>$this->data->page,
-            'phone'=>$this->data->phone,
-            'natID'=>$this->data->natID,
+            'people_id'=>$this->notification->id,
+            'name'=>$this->notification->people_name,
+            'page'=>$this->notification->page,
+            'cname' => $this->data->cname,
+            'cnmbr' => $this->data->cnmbr,
+            'resume' => $this->data->resume,
+            'exDate' => $this->data->year.'-'.$this->data->month,
         ];
     }
 }

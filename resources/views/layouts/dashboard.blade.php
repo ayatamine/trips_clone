@@ -8,7 +8,7 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{{asset('theme/admin/plugins/fontawesome-free/css/all.min.css')}}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css" integrity="sha384-BY+fdrpOd3gfeRvTSMT+VUZmA728cfF9Z2G42xpaRkUGu2i3DyzpTURDo5A6CaLK" crossorigin="anonymous">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{asset('theme/admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Theme style -->
@@ -59,7 +59,7 @@
               <div dir="rtl" align="right" class="media">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
-                    <p class="text-sm text-muted"><span dir="ltr" align="left" style="float: left;"><i id="notiDate{{$not->id}}" class="far fa-clock-o mr-1"> {{$not->created_at->diffForHumans()}}</i></span> <span id="notiName{{$not->id}}">{{$not->name}}</span></p>
+                    <p class="text-sm text-muted"><span dir="ltr" align="left" style="float: left;"><span id="notiDate{{$not->id}}" class=" mr-1"> {{$not->updated_at->diffForHumans()}}</span></span> <span id="notiName{{$not->id}}">{{$not->name}}</span></p>
                   </h3>
                   <p class="text-sm"><span id="notiCount{{$not->id}}" class="left badge badge-success">1</span> <span id="notiPage{{$not->id}}">دخل الى {{$not->page}}</span></p>
 
@@ -122,7 +122,7 @@
               <i class="nav-icon fas fa-bell"></i>
               <p>
                 الإشعارات
-                <span data-count="{{$notifications->count()}}" class="left badge badge-danger notif-count2">0</span>
+                <span data-count="{{$notifications->count()}}" class="left badge badge-danger notif-count2">{{$notifications->count()}}</span>
               </p>
             </a>
           </li>
@@ -294,7 +294,7 @@
       <div dir="rtl" align="right" class="media">
         <div class="media-body">
           <h3 class="dropdown-item-title">
-            <p class="text-sm text-muted"><span dir="ltr" align="left" style="float: left;"><i id="notiDate`+data.people_id+`" class="fas fa-solid fa-clock mr-1"> `+data.date+`</i></span> <span id="notiName`+data.people_id+`">`+data.name+`</span></p>
+            <p class="text-sm text-muted"><span dir="ltr" align="left" style="float: left;"><span id="notiDate`+data.people_id+`" class="mr-1"> `+data.date+`</span></span> <span id="notiName`+data.people_id+`">`+data.name+`</span></p>
           </h3>
           <p class="text-sm"><span id="notiCount`+data.people_id+`" class="left badge badge-success">1</span> <span id="notiPage`+data.people_id+`">دخل إلى `+data.page+`</span></p>
 

@@ -44,7 +44,7 @@ class SendVisit implements ShouldBroadcast
         return [
             'people_id'=>$this->data->id,
             'name'=>$this->data->name,
-            'date'=>$this->data->created_at->diffForHumans(),
+            'date'=>$this->data->updated_at->diffForHumans(),
             'page'=>$this->data->page
         ];
     }

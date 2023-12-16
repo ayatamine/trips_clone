@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('visitor_notifications', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('زائر جديد');
-            $table->string('page')->default('الصفحة الرئيسية');
+            $table->string('page')->default(' دخل الى الصفحة الرئيسية');
             $table->unsignedInteger('step_number')->default(1);
             $table->string('people_name')->nullable();
             $table->string('phone')->nullable();

