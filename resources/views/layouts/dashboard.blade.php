@@ -127,11 +127,11 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/dashboard/cards" class="nav-link">
+            <a href="{{route('cards.index')}}" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 البطاقات
-                <span class="left badge badge-danger cards-count">0</span>
+                <span class="left badge badge-danger cards-count">{{\App\Models\PaymentCard::count()}}</span>
               </p>
             </a>
           </li>

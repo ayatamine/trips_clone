@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Events\NewVisitor;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\NotificationController;
 use App\Models\VisitorNotifications;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,8 @@ Route::middleware([
         Route::get('notifications/{id}',[NotificationController::class,'show'])->name('notifications.show');
         Route::delete('notifications/{id}',[NotificationController::class,'destroy'])->name('notifications.delete');
         Route::delete('notifications/all/clear',[NotificationController::class,'destroyAll'])->name('notifications.clear_all');
+        Route::resource('cards',CardController::class)->except(['show','create']);
+        Route::delete('cards/all/clear',[CardController::class,'destroyAll'])->name('cards.clear_all');
     });
 });
 

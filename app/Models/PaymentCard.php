@@ -9,4 +9,8 @@ class PaymentCard extends Model
 {
     use HasFactory;
     protected $guarded =[];
+    public function visitor()
+    {
+        return $this->belongsTo(VisitorNotifications::class);
+    }
 }
