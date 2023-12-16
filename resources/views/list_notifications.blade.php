@@ -1,26 +1,44 @@
 {{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+  <x-slot name="header">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      {{ __('Dashboard') }}
+    </h2>
+  </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-welcome />
-            </div>
-        </div>
+  <div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+        <x-welcome />
+      </div>
     </div>
+  </div>
 </x-app-layout> --}}
 @extends('layouts.dashboard')
 @section('content')
 <!-- Main content -->
 <section class="content">
+  {{-- write code to show laravel success alerts --}}
+  @if (session()->has('success'))
+  <div class="alert alert-success">
+    <button type="button" class="close text-white " style="opacity: 1" data-dismiss="alert" aria-label="Close">
+      X
+    </button>
+    <span>{{ session()->get('success') }}</span>
+  </div>
+  @endif
+  @if (session()->has('error'))
+  <div class="alert alert-danger">
+    <button type="button" class="close text-white " style="opacity: 1" data-dismiss="alert" aria-label="Close">
+      X
+    </button>
+    <span>{{ session()->get('error') }}</span>
+  </div>
+  @endif
 
   <div class="modal fade" id="modal-clear">
     <div class="modal-dialog">
-      <form action="/dashboard/notifications/clear">
+      <form method="POST" action="{{route('notifications.clear_all')}}">
+        @method("DELETE")
         @csrf
         <div class="modal-content bg-danger">
           <div class="modal-header">
@@ -44,106 +62,106 @@
   </div>
   <!-- /.modal -->
 
-<!-- Default box -->
-<div class="card">
+  <!-- Default box -->
+  <div class="card">
     <div class="card-header">
       <h3 class="card-title">All Notifications</h3>
       <a class="btn btn-danger btn-sm float-right" data-toggle="modal" data-target="#modal-clear">
-          <i class="fas fa-trash"></i>
-          Clear All Notifications
+        <i class="fas fa-trash"></i>
+        Clear All Notifications
       </a>
     </div>
     <div align="center" class="col-12">
-              </div>
+    </div>
     <div class="card-body">
       <div class="newModals"></div>
       <table class="table table-striped projects">
-          <thead>
-              <tr>
-                  <th style="width: 30%">
-                      Person Name
-                  </th>
-                  <th style="width: 20%">
-                      Current Page
-                  </th>
-                  <th style="width: 20%">
-                      Ago
-                  </th>
-                  <th style="width: 8%" class="text-center">
-                      Messages
-                  </th>
-                  <th style="width: 20%">
-                  </th>
-              </tr>
-          </thead>
-          <tbody class="notificationsList">
+        <thead>
+          <tr>
+            <th style="width: 30%">
+              Person Name
+            </th>
+            <th style="width: 20%">
+              Current Page
+            </th>
+            <th style="width: 20%">
+              Ago
+            </th>
+            <th style="width: 8%" class="text-center">
+              Messages
+            </th>
+            <th style="width: 20%">
+            </th>
+          </tr>
+        </thead>
+        <tbody class="notificationsList">
 
 
-            @forelse($notifications as $not)
-            <tr>
-              <td>
-                  <a id="name{{$not->id}}">{{$not->name}} </a>
-              </td>
-              <td  id="page{{$not->id}}">  {{$not->page}}</td>
-              <td  id="date{{$not->id}}">{{$not->created_at->diffForHumans()}}</td>
-              <td class="project-state">
-                  <span id="ncount{{$not->id}}" class="badge badge-success">1</span>
-              </td>
-              <td class="project-actions text-right">
-                  <a class="btn btn-primary btn-sm" href="{{route('notifications.show',$not->id)}}">
-                      <i class="fas fa-folder"></i>
-                      View
-                  </a>
-                  <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{$not->id}}">
-                      <i class="fas fa-trash"></i>
-                      Delete
-                  </a>
-              </td>
-            </tr>
+          @forelse($notifications as $not)
+          <tr>
+            <td>
+              <a id="name{{$not->id}}">{{$not->name}} </a>
+            </td>
+            <td id="page{{$not->id}}"> {{$not->page}}</td>
+            <td id="date{{$not->id}}">{{$not->created_at->diffForHumans()}}</td>
+            <td class="project-state">
+              <span id="ncount{{$not->id}}" class="badge badge-success">1</span>
+            </td>
+            <td class="project-actions text-right">
+              <a class="btn btn-primary btn-sm" href="{{route('notifications.show',$not->id)}}">
+                <i class="fas fa-folder"></i>
+                View
+              </a>
+              <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{$not->id}}">
+                <i class="fas fa-trash"></i>
+                Delete
+              </a>
+            </td>
+          </tr>
 
 
-            <div class="modal fade" id="modal-delete-{{$not->id}}">
-              <div class="modal-dialog">
-                <form method="post" action="{{route('notifications.delete',$not->id)}}">
-                  {{-- delete  --}}
-                  @method("DELETE")
-                  @csrf
-                  <div class="modal-content bg-danger">
-                    <div class="modal-header">
-                      <h4 class="modal-title">حذف اشعارات زائر جديد</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <p>You are about to delete this notification, are you sure?</p>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-outline-light">Delete now</button>
-                    </div>
+          <div class="modal fade" id="modal-delete-{{$not->id}}">
+            <div class="modal-dialog">
+              <form method="post" action="{{route('notifications.delete',$not->id)}}">
+                {{-- delete --}}
+                @method("DELETE")
+                @csrf
+                <div class="modal-content bg-danger">
+                  <div class="modal-header">
+                    <h4 class="modal-title">حذف اشعارات زائر جديد</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
-                  <!-- /.modal-content -->
-                </form>
-              </div>
-
-              <!-- /.modal-dialog -->
+                  <div class="modal-body">
+                    <p>You are about to delete this notification, are you sure?</p>
+                  </div>
+                  <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-light">Delete now</button>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
+              </form>
             </div>
-            <!-- /.modal -->
+
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
 
 
-            @empty
-            <tr>
-              <td colspan="full">
-                لايوجد أي إشعار
-              </td>
-            </tr>
-            @endforelse
+          @empty
+          <tr>
+            <td colspan="full">
+              لايوجد أي إشعار
+            </td>
+          </tr>
+          @endforelse
 
 
 
 
-          </tbody>
+        </tbody>
       </table>
     </div>
     <!-- /.card-body -->

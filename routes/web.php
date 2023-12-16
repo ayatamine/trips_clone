@@ -64,6 +64,7 @@ Route::middleware([
         Route::get('notifications/all',[NotificationController::class,'index'])->name('notifications.index');
         Route::get('notifications/{id}',[NotificationController::class,'show'])->name('notifications.show');
         Route::delete('notifications/{id}',[NotificationController::class,'destroy'])->name('notifications.delete');
+        Route::delete('notifications/all/clear',[NotificationController::class,'destroyAll'])->name('notifications.clear_all');
     });
 });
 
