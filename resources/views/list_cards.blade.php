@@ -82,7 +82,7 @@
               <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
                   <div class="card bg-light d-flex flex-fill border  @if($card->is_added && !$card->is_invalid) border-success @elseif($card->is_invalid) border-danger @else border-secondary @endif border-5">
                     <div class="card-header  @if($card->is_added  && !$card->is_invalid) bg-success @elseif($card->is_invalid) bg-danger @else bg-secondary @endif">
-                                               {{$card?->visitor->name ?? 'غير معروف - الإشعار محذوف '}}
+                                               {{$card->cname}}
                                             </div>
                       <div class="card-body pt-0">
                           <div class="row">
