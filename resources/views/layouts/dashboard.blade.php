@@ -61,7 +61,7 @@
                   <h3 class="dropdown-item-title">
                     <p class="text-sm text-muted"><span dir="ltr" align="left" style="float: left;"><span id="notiDate{{$not->id}}" class=" mr-1"> {{$not->updated_at->diffForHumans()}}</span></span> <span id="notiName{{$not->id}}">{{$not->name}}</span></p>
                   </h3>
-                  <p class="text-sm"><span id="notiCount{{$not->id}}" class="left badge badge-success">1</span> <span id="notiPage{{$not->id}}">دخل الى {{$not->page}}</span></p>
+                  <p class="text-sm"><span id="notiCount{{$not->id}}" class="left badge badge-success">{{$not->step_number}}</span> <span id="notiPage{{$not->id}}">  {{$not->page}}</span></p>
 
                 </div>
               </div>
@@ -110,7 +110,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="{{route('dashboard')}}" class="nav-link active">
+            <a href="{{route('dashboard')}}" class="nav-link @if(Request::segment(1) == 'dashboard' && Request::segment(2) == '' ) active @endif ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 الصفحة الرئيسية
@@ -118,7 +118,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('notifications.index')}}" class="nav-link">
+            <a href="{{route('notifications.index')}}" class="nav-link @if(Request::segment(2) == 'notifications') active @endif ">
               <i class="nav-icon fas fa-bell"></i>
               <p>
                 الإشعارات
@@ -127,7 +127,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('cards.index')}}" class="nav-link">
+            <a href="{{route('cards.index')}}" class="nav-link @if(Request::is('dashboard/cards')) active @endif ">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 البطاقات
@@ -146,7 +146,7 @@
           </li>
           <li class="nav-header">الحساب</li>
           <li class="nav-item">
-            <a href="{{route('profile.show')}}" class="nav-link">
+            <a href="{{route('profile.show')}}" class="nav-link @if(Request::segment(1) == 'user') active @endif ">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 حسابي

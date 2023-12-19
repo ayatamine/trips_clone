@@ -42,10 +42,15 @@ Route::get('/', function () {
 });
 Route::post('search/{type}', [TripController::class,'saveTrip'])->name('init_trip');
 Route::get('summary/{id}', [TripController::class,'summary'])->name('summary');
+Route::get('bus-summary/{id}', [TripController::class,'busSummary'])->name('bus_summary');
 Route::get('people/data', [TripController::class,'peopleDataPage'])->name('people_data_get');
+Route::get('manage', [TripController::class,'peopleDataPage'])->name('people_data_get');
 Route::post('people/data/save', [TripController::class,'peopleDataStore'])->name('people_data_store');
 Route::get('part', [TripController::class,'paymentPage'])->name('trip_payment');
 Route::post('part', [TripController::class,'paymentStore'])->name('trip_payment_store');
+Route::get('part/waiting', function(){
+    return view('waiting');
+})->name('trip_payment_waiting');
 Route::get('part/verification', [TripController::class,'verifyOtp'])->name('verify_otp');//
 Route::post('part/verification/store', [TripController::class,'verifyOtpStore'])->name('otp.store');//
 Route::get('part/auth', [TripController::class,'partAuth'])->name('confirm_card_owner');//اثبات ملكية البطاقة

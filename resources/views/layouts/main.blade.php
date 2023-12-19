@@ -14,9 +14,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('theme/build/assets/style.css')}}">
+    <style>
+        #error-message{display: none}
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="{{asset('theme/build/assets/jquery.creditCardValidator.js')}}"></script>
     <script>
+
         function validate(){
             var valid = true;
             $(".input_box").css('background-color','');
@@ -155,6 +159,7 @@
             return true;
         }
     </script>
+    @yield('scripts')
 
 </body>
 </html>

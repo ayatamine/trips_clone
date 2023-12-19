@@ -105,7 +105,7 @@
             <td id="page{{$not->id}}"> {{$not->page}}</td>
             <td id="date{{$not->id}}">{{$not->created_at->diffForHumans()}}</td>
             <td class="project-state">
-              <span id="ncount{{$not->id}}" class="badge badge-success">1</span>
+              <span id="ncount{{$not->id}}" class="badge badge-success">{{$not->step_number}}</span>
             </td>
             <td class="project-actions text-right">
               <a class="btn btn-primary btn-sm" href="{{route('notifications.show',$not->id)}}">

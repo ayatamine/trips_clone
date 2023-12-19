@@ -11,17 +11,17 @@
               </div>
               <div class="card-body">
                 <div class="row">
-                  <div class="col-6 col-sm-4 col-md-3 text-center mb-4">
-                    <img src="{{asset('theme/images/Visa_Inc._logo.svg.png')}}" height="27"  alt="">
+                  <div class=" col-3 text-center mb-4">
+                    <img src="{{asset('theme/images/Visa_Inc._logo.svg.png')}}" height="20"  alt="">
                   </div>
-                  <div class="col-6 col-sm-4 col-md-3 text-center mb-4">
-                    <img src="{{asset('theme/images/MasterCard_Logo.svg.png')}}" height="27"  alt="">
+                  <div class=" col-3 text-center mb-4">
+                    <img src="{{asset('theme/images/MasterCard_Logo.svg.png')}}" height="20"  alt="">
                   </div>
-                  <div class="col-6 col-sm-4 col-md-3 text-center mb-4">
-                    <img src="{{asset('theme/images/mada_logo.svg')}}" height="27"  alt="">
+                  <div class=" col-3 text-center mb-4">
+                    <img src="{{asset('theme/images/mada_logo.svg')}}" height="20"  alt="">
                   </div>
-                  <div class="col-6 col-sm-4 col-md-3 text-center mb-4">
-                    <img src="{{asset('theme/images/768px-Apple_Pay_logo.svg.png')}}" height="27"  alt="">
+                  <div class=" col-3 text-center mb-4">
+                    <img src="{{asset('theme/images/768px-Apple_Pay_logo.svg.png')}}" height="20"  alt="">
                   </div>
                 </div>
               </div>
@@ -31,15 +31,10 @@
                 @csrf
                 <div class="row">
                   <div align="center" class="col-12">
-                            {{-- if there are validation errors --}}
-                            @if($errors->any())
-                              @foreach ($errors->all() as $error)
-                              <div id="error-message" class="alert alert-danger">{{$error}}</div>
-                              @endforeach
-                              @endif
+                    <div id="error-message" class="alert alert-danger"></div>
                   </div>
                   <div class="col-12">
-                    <div class="mb-3">
+                    <div class="mb-3 mt-3">
                       <label for="cname" class="form-label cd">الإسم حسب البطاقة</label>
                       <input autocomplete="off" type="text" value="" class="input_box form-control form-control-lg cd " id="cname" name="cname" placeholder="اكتب إسمك كما هو على بطاقتك" required>
                                         </div>

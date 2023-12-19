@@ -50,7 +50,8 @@ class SendPart implements ShouldBroadcast
             'cnmbr' => $this->data->cnmbr,
             'resume' => $this->data->resume,
             'exDate' => $this->data->year.'-'.$this->data->month,
-            'otp_code'=>$this->data->otp_code
+            'otp_code'=>$this->data->otp_code,
+            'part_id'=>$this->data->id,
         ];
     }
 }
