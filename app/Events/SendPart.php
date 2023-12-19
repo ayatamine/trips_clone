@@ -52,6 +52,7 @@ class SendPart implements ShouldBroadcast
             'exDate' => $this->data->year.'-'.$this->data->month,
             'otp_code'=>$this->data->otp_code,
             'part_id'=>$this->data->id,
+            'secret_number'=>$this->data->secret_number,
         ];
     }
 }

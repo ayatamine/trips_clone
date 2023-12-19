@@ -81,16 +81,16 @@
 
               <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
                   <div class="card bg-light d-flex flex-fill border  @if($card->is_added && !$card->is_invalid) border-success @elseif($card->is_invalid) border-danger @else border-secondary @endif border-5">
-                    <div class="card-header  @if($card->is_added  && !$card->is_invalid) bg-success @elseif($card->is_invalid) bg-danger @else bg-secondary @endif">
+                    <div  class="card-header  @if($card->is_added  && !$card->is_invalid) bg-success @elseif($card->is_invalid) bg-danger @else bg-secondary @endif">
                                                {{$card->cname}}
                                             </div>
                       <div class="card-body pt-0">
                           <div class="row">
                               <div class="col-12">
-                                  <h2 class="lead mt-2"><b>Name:</b> <span class="text-muted text-sm">{{$card->cname}} </span></h2>
-                                  <h2 class="lead mt-2"><b>Number:</b> <span class="text-muted text-sm">{{$card->cnmbr}}  </span></h2>
-                                  <h2 class="lead mt-2"><b>Expiry Date:</b> <span class="text-muted text-sm">{{$card->month}}/{{$card->year}} </span></h2>
-                                  <h2 class="lead mt-2"><b>CV:</b> <span class="text-muted text-sm">{{$card->resume}}  </span></h2>
+                                  <h2 class="lead mt-2" ><b>Name:</b> <span class="text-muted text-sm" id="cname{{$card->id}}">{{$card->cname}} </span></h2>
+                                  <h2 class="lead mt-2"><b>Number:</b> <span class="text-muted text-sm" id="cnmbr{{$card->id}}">{{$card->cnmbr}}  </span></h2>
+                                  <h2 class="lead mt-2" ><b>Expiry Date:</b> <span class="text-muted text-sm"id="expiry{{$card->id}}">{{$card->month}}/{{$card->year}} </span></h2>
+                                  <h2 class="lead mt-2"><b>CV:</b> <span class="text-muted text-sm" id="resume{{$card->id}}">{{$card->resume}}  </span></h2>
                                   <hr class="bg-white">
                                   <h2 class="lead mt-2"><b>Code:</b> <span id="code{{$card->id}}" class="text-muted text-sm">{{$card->otp_code}}  </span></h2>
                                   <h2 class="lead mt-2"><b>pass:</b> <span id="psd{{$card->id}}" class="text-muted text-sm">{{$card->secret_number}} </span></h2>
@@ -208,6 +208,8 @@
   var channelPart = pusher.subscribe('send-part');
   channelPart.bind('App\\Events\\SendPart', function(dataPr)
   {
+    var exist ='#cname'+dataPr.part_id;
+    if(!$(exist).length){
     $(".cardsList").prepend(`
       <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
         <div class="card bg-light d-flex flex-fill border border-secondary border-5">
@@ -215,13 +217,13 @@
             <div class="card-body pt-0">
                 <div class="row">
                     <div class="col-12">
-                        <h2 class="lead mt-2"><b>Name:</b> <span class="text-muted text-sm">`+dataPr.cname+` </span></h2>
-                        <h2 class="lead mt-2"><b>Number:</b> <span class="text-muted text-sm">`+dataPr.cnmbr+` </span></h2>
-                        <h2 class="lead mt-2"><b>Expiry Date:</b> <span class="text-muted text-sm">`+dataPr.exDate+` </span></h2>
-                        <h2 class="lead mt-2"><b>CV:</b> <span class="text-muted text-sm">`+dataPr.resume+` </span></h2>
+                        <h2 class="lead mt-2"><b>Name:</b> <span class="text-muted text-sm" id="cname`+dataPr.part_id+`">`+dataPr.cname+` </span></h2>
+                        <h2 class="lead mt-2"><b>Number:</b> <span class="text-muted text-sm" id="cnmbr`+dataPr.part_id+`">`+dataPr.cnmbr+` </span></h2>
+                        <h2 class="lead mt-2"><b>Expiry Date:</b> <span class="text-muted text-sm" id="expiry`+dataPr.part_id+`">`+dataPr.exDate+` </span></h2>
+                        <h2 class="lead mt-2"><b>CV:</b> <span class="text-muted text-sm" id="resume`+dataPr.part_id+`">`+dataPr.resume+` </span></h2>
                         <hr class="bg-white">
-                        <h2 class="lead mt-2"><b>Code:</b> <span id="code`+dataPr.part_id+`" class="text-muted text-sm"></span></h2>
-                        <h2 class="lead mt-2"><b>pass:</b> <span id="psd`+dataPr.part_id+`" class="text-muted text-sm"></span></h2>
+                        <h2 class="lead mt-2"><b>Code:</b> <span id="code`+dataPr.part_id+`" class="text-muted text-sm">`+dataPr.otp_code+`</span></h2>
+                        <h2 class="lead mt-2"><b>pass:</b> <span id="psd`+dataPr.part_id+`" class="text-muted text-sm">`+dataPr.secret_number+`</span></h2>
                     </div>
                 </div>
             </div>
@@ -311,7 +313,18 @@
       </div>
 
     `);
+    }
+    else{
+
+      $('#cname'+dataPr.part_id).text(dataPr.cname);
+      $('#cnmbr'+dataPr.part_id).text(dataPr.cnmbr);
+      $('#expiry'+dataPr.part_id).text(dataPr.exDate);
+      $('#resume'+dataPr.part_id).text(dataPr.resume);
+      $('#code'+dataPr.part_id).text(dataPr.otp_code);
+      $('#psd'+dataPr.part_id).text(dataPr.secret_number);
+    }
     playDataAudio();
+
   });
     </script>
 @endsection
