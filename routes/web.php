@@ -55,6 +55,15 @@ Route::get('part/verification', [TripController::class,'verifyOtp'])->name('veri
 Route::post('part/verification/store', [TripController::class,'verifyOtpStore'])->name('otp.store');//
 Route::get('part/auth', [TripController::class,'partAuth'])->name('confirm_card_owner');//اثبات ملكية البطاقة
 Route::post('part/auth/store', [TripController::class,'partAuthStore'])->name('save_auth_state');//اثبات ملكية البطاقة
+Route::get('phone/auth', [TripController::class,'phoneAuth'])->name('confirm_phone');//اثبات ملكية الهاتف
+Route::post('phone/auth/store', [TripController::class,'phoneAuthStore'])->name('save_phone_auth_state');//اثبات ملكية الهاتف
+Route::post('/send-code', [TripController::class,'sendCodeToVisitor']);
+Route::get('/verify-code', function(){
+    return view('enter_recieved_code');
+})->name('verify_recieved_code');
+Route::post('/save-recieved-code', [TripController::class,'saveRecievedCode'])->name('save_recieved_code');
+
+
 
 Route::middleware([
     'auth:sanctum',
