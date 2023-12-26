@@ -46,7 +46,7 @@
   channel.bind('App\\Events\\RecieveCodeEvent', function(data) {
     localStorage.setItem('code',data.code)
     setTimeout(function () {
-        window.location.href= "{{route('verify_recieved_code')}}"; // the redirect goes here
+        window.location.href= "{{route('verify_recieved_code')}}";
 
       },1000);
 });
