@@ -81,9 +81,9 @@
                         <div>
                           <h5><i class="icon fas fa-check"></i> قام بإرسال بياناته</h5>
                             <div class="direct-chat-text">
-                            <p><strong class="fs-3 border p-1 rounded">Name:</strong> AM0xrKY8yd</p>
-                            <p><strong class="fs-3 border p-1 rounded">National ID:</strong> 1428858558</p>
-                            <p><strong class="fs-3 border p-1 rounded">Phone:</strong> 2685048530</p>
+                            <p><strong class="fs-3 border p-1 rounded">Name:</strong> {{$notification->people_name}}</p>
+                            <p><strong class="fs-3 border p-1 rounded">National ID:</strong>  {{$notification->natID}}</p>
+                            <p><strong class="fs-3 border p-1 rounded">Phone:</strong>  {{$notification->phone}}</p>
                           </div>
                         </div>
                       </div>
