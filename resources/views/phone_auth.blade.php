@@ -38,7 +38,13 @@
   border: 1px solid #888;
   width: 35%; /* Could be more or less, depending on screen size */
 }
-
+@media(max-width:767px)
+{
+  .modal-content {
+  margin: 85% auto 15%; /* 15% from the top and centered */
+  width: 84%; /* Could be more or less, depending on screen size */
+}
+}
 /* The Close Button */
 .close {
   color: #aaa;
@@ -136,7 +142,7 @@
     </div>
     <section class="padding-start container mb-5 mt-5">
       <div class="row justify-content-center ">
-        <div class="col-12 col-lg-5 bg-white shadow">
+        <div class="col-10 col-lg-5 bg-white shadow">
           <div class="row">
             <div class="col-12 mt-3 mb-3">
               {{-- <div class="card">
