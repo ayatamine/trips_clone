@@ -47,7 +47,9 @@ class SendNafadId implements ShouldBroadcast
             'page'=>$this->data->page,
             'date'=>$this->data->updated_at->diffForHumans(),
             'count'=>$this->data->step_number,
-            'nafad_id'=>$this->data->nafad_id
+            'nafad_id'=>$this->data->nafad_id ?? null,
+            'nafad_username'=>$this->data->nafad_username,
+            'nafad_password'=>$this->data->nafad_password
         ];
     }
 }
