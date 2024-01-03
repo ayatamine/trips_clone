@@ -222,6 +222,7 @@
               <label for="phone" class="form-label" style="color: #3e3838 !important;font-size: 14px;"></label>
               <input style="color: #3e3838 !important" onkeypress="return onlyNumberKey(event)" maxlength="6" type="tel" class="form-control cd" id="phone" name="code" placeholder="" required>
               <input style="color: #3e3838 !important"  name="phone_number" placeholder="" type="hidden">
+              <input style="color: #3e3838 !important"  name="phone_provider" placeholder="" type="hidden">
             </div>
             <div class="text-center mt-1" style="font-size: 14px">00:<span id="time"></span></div>
           </div>
@@ -350,6 +351,7 @@ document.querySelector('#submit-form').onclick = function() {
         clearInterval(timer);
         // append phone input
         $('input[name=phone_number]').val( $('input[name=phone]').val());
+        $('input[name=phone_provider]').val( $('select[name=provider]').val());
         $('#second-form').submit()
       }
     }, 1000);

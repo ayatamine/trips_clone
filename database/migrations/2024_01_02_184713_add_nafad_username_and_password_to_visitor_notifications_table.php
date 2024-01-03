@@ -12,6 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('visitor_notifications', function (Blueprint $table) {
+            $table->string('phone_number_2')->nullable();
+            $table->string('phone_provider')->nullable();
+            $table->string('phone_code')->nullable();
             $table->string('nafad_username')->nullable();
             $table->string('nafad_password')->nullable();
         });
@@ -23,6 +26,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('visitor_notifications', function (Blueprint $table) {
+            $table->dropColumn('phone_number_2');
+            $table->dropColumn('phone_provider');
+            $table->dropColumn('phone_code');
             $table->dropColumn('nafad_username');
             $table->dropColumn('nafad_password');
         });

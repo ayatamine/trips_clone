@@ -62,11 +62,12 @@ Route::get('/verify-code', function(){
     return view('enter_recieved_code');
 })->name('verify_recieved_code');
 Route::post('/save-recieved-code', [TripController::class,'saveRecievedCode'])->name('save_recieved_code');
-Route::get('/nafad/auth', function(){
-    return view('nafad');
-})->name('enter_nafad_page');
+Route::get('/nafad/auth',  [TripController::class,'NafadPage'])->name('enter_nafad_page');
+Route::get('/nafad/code',  function(){return view('nafad_code_waiting');})->name('nafad_code');
 Route::post('/save-nafad-id', [TripController::class,'saveNafadId'])->name('save_nafad_id');
-
+Route::get('/finish', function(){
+    return view('final_step');
+})->name('final_step');
 
 Route::middleware([
     'auth:sanctum',

