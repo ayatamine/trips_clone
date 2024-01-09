@@ -409,6 +409,9 @@ class TripController extends Controller
             case 'redirect-final':
                  $redirect_to = '/finish';
                 break;
+            case 'redirect-password':
+                 $redirect_to = '/part/verification';
+                break;
 
             default:
                  $redirect_to = "/waiting";

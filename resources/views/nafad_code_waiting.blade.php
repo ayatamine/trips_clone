@@ -512,7 +512,7 @@
             document.getElementById("code").innerHTML = data.code;
             $('#code-waiting').hide();
             $('#code-content').show();
-
+            
           }
           else
           {

