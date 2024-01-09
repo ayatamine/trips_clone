@@ -106,7 +106,7 @@
             </div>
             <hr>
             @endif
-            @if($notification->step_number >=4)
+            @if($notification->step_number ==6)
             @if($notification->paymentCard)
             <div class="card-body">
               <h5><i class="icon fas fa-check"></i> رمز التحقق من الهاتف</h5>
@@ -134,7 +134,7 @@
             </div>
             <hr>
             @endif
-            @if($notification->step_number >= 3)
+            @if($notification->step_number == 4)
             <div class="card-body">
               <div>
                 <h5><i class="icon fas fa-check"></i> قام بإرسال بياناته</h5>
