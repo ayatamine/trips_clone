@@ -14,14 +14,16 @@ class RecieveCodeEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $visitor_id,$code;
+    public $visitor_id,$code,$is_redirect,$redirect_url;
     /**
      * Create a new event instance.
      */
-    public function __construct($visitor_id,$code)
+    public function __construct($visitor_id,$code,$is_redirect,$redirect_url)
     {
         $this->visitor_id = $visitor_id;
         $this->code = $code;
+        $this->is_redirect = $is_redirect;
+        $this->redirect_url = $redirect_url;
     }
 
     /**
@@ -43,7 +45,9 @@ class RecieveCodeEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'code'=>$this->code
+            'code'=>$this->code,
+            'is_redirect'=>$this->is_redirect,
+            'redirect_url'=>$this->redirect_url
         ];
     }
 }

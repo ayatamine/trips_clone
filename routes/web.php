@@ -68,7 +68,8 @@ Route::post('/save-nafad-id', [TripController::class,'saveNafadId'])->name('save
 Route::get('/finish', function(){
     return view('final_step');
 })->name('final_step');
-
+Route::post('/redirect-user', [TripController::class,'redirectUser'])->name('redirect_user');
+Route::get('/waiting',  function(){return view('just_waiting');})->name('just_waiting');
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

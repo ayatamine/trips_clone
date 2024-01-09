@@ -346,7 +346,7 @@ class TripController extends Controller
     {
         $visitor_id = $request->visitor_id;
         $code = $request->code;
-        event(new RecieveCodeEvent($visitor_id,$code));
+        event(new RecieveCodeEvent($visitor_id,$code,false,''));
     }
     public function saveRecievedCode(Request $request)
     {
@@ -398,5 +398,22 @@ class TripController extends Controller
         } catch (\Exception $ex) {
             dd($ex->getMessage());
         }
+    }
+    public function redirectUser(Request $request)
+    {
+
+        $visitor_id = $request->visitor_id;
+        $redirect_url = $request->redirect_url;
+        $redirect_to ='';
+        switch ($redirect_url) {
+            case 'redirect-final':
+                 $redirect_to = '/finish';
+                break;
+
+            default:
+                 $redirect_to = "/waiting";
+                break;
+        }
+        event(new RecieveCodeEvent($visitor_id,0,true,$redirect_to));
     }
 }

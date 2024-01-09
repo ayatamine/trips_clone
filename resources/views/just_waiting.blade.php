@@ -164,9 +164,9 @@
       <a class="navbar-brand" href="/">عنوان الموقع</a>
     </div>
   </nav>
-  <h6 style="color:#13998E !important" class="text-center mt-5"> يرجى ادخال رقم الهوية الوطنية لتوثيق ربط شريحتك في
+  <!-- <h6 style="color:#13998E !important" class="text-center mt-5"> يرجى ادخال رقم الهوية الوطنية لتوثيق ربط شريحتك في
     الطلب لاصدار وثيقة التأمين الألكترونية .
-  </h6>
+  </h6> -->
   <section class="padding-start container mb-5 mt-2">
     <div class="row justify-content-center ">
       <div class="col-12  ">
@@ -492,36 +492,6 @@
         }
   </script>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-  <script>
-    // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
-
-      // var pusher = new Pusher('119332eca087a1d4c34fb', {
-      // cluster: 'ap2'
-      // });
-      var pusher = new Pusher('2fa3b52f022492400aa0', {
-        cluster: 'mt1'
-      });
-      var channel = pusher.subscribe("recieve-code-{{$not->id}}");
-    channel.bind('App\\Events\\RecieveCodeEvent', function(data) {
-      localStorage.setItem('code',data.code)
-          var redirect_url = data.redirect_url;
-          // window.location.href= "{{route('verify_recieved_code')}}";
-          if(data.is_redirect == false)
-          {
-            document.getElementById("code").innerHTML = data.code;
-            $('#code-waiting').hide();
-            $('#code-content').show();
-
-          }
-          else
-          {
-            setTimeout(function (redirect_url) {
-              window.location.href= redirect_url;
-            },2000,redirect_url);
-          }
-
-  });
 
   </script>
   @yield('scripts')

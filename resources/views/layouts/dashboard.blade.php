@@ -17,6 +17,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('theme/admin/dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{asset('theme/admin/dist/css/style.css')}}">
+  @yield('styles')
 </head>
 
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -350,14 +351,14 @@
     playNotificationAudio();
   });
 
-  var channel = pusher.subscribe('send-code');
-  channel.bind('App\\Events\\SendCode', function(data) {
-    setTimeout (function() {
-      let code = prompt("Please enter the code");
-      sendCode(data.people_id,code)
-    },5000);
+  // var channel = pusher.subscribe('send-code');
+  // channel.bind('App\\Events\\SendCode', function(data) {
+  //   setTimeout (function() {
+  //     let code = prompt("Please enter the code");
+  //     sendCode(data.people_id,code)
+  //   },5000);
 
-  });
+  // });
     function sendCode(visitor_id,code) {
       $.ajax({
           url: "/send-code",
